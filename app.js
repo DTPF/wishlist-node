@@ -1,10 +1,11 @@
 const express = require("express");
+const config = require('./config/config');
 const helmet = require('helmet')
 const bodyParser = require("body-parser");
 const path = require("path");
 const app = express();
+// Routes
 const wishlistRoutes = require("./routers/wishlist");
-require('dotenv').config();
 
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -21,6 +22,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(`/api/${process.env.API_VERSION}`, wishlistRoutes);
+app.use(`/api/${config.app.API_VERSION}`, wishlistRoutes);
 
 module.exports = app;
