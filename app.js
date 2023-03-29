@@ -1,10 +1,12 @@
 const express = require("express");
+const helmet = require('helmet')
 const bodyParser = require("body-parser");
 const path = require("path");
 const app = express();
 const wishlistRoutes = require("./routers/wishlist");
 require('dotenv').config();
 
+app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
