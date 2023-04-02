@@ -2,14 +2,11 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const WishlistSchema = Schema({
-  title: {
-    type: String,
-    required: [true, 'Escribe algo'],
-		unique: true
-  },
-  completed: Boolean,
-  createdAt: Date,
-  updatedAt: Date
+  userId: String,
+  wishlistName: String,
+  wishlistItems: []
+}, {
+  timestamps: true
 });
 
 module.exports = mongoose.model("Wishlist", WishlistSchema);
