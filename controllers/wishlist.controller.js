@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require('uuid');
 const Wishlist = require('../models/wishlist.model')
 const User = require('../models/user.model')
 
@@ -78,11 +79,12 @@ async function getWishlistById(req, res) {
 
 async function postNewWishlistItem(req, res) {
 	const { wishlistId } = req.params;
-	const { wishlistItemId, title, description } = req.body;
+	const { title, description } = req.body;
+	const id = uuidv4()
 
 	try {
 		const newObj = {
-			id: wishlistItemId,
+			id,
 			title,
 			description,
 			isCompleted: false
@@ -97,6 +99,10 @@ async function postNewWishlistItem(req, res) {
 			{ returnOriginal: false }
 		);
 
+		if (!wishlistItemStored) {
+			return res.status(404).send({ status: 404, message: 'No se ha podido crear' });
+		}
+		
 		return res.status(200).send({
 			status: 200,
 			message: 'Añadido correctamente',
@@ -105,7 +111,7 @@ async function postNewWishlistItem(req, res) {
 		});
 	} catch (err) {
 		if (err.name = 'CastError') {
-			return res.status(404).send({ status: 404, message: err });
+			return res.status(404).send({ status: 404, message: 'No se ha encontrado la lista' });
 		} else {
 			return res.status(500).send({ status: 500, message: err });
 		}
@@ -122,7 +128,7 @@ async function removeWishlistItem(req, res) {
 			{ returnOriginal: false }
 		);
 
-		return res.status(200).send({ status: 200, wishlistRemoved: wishlistStored });
+		return res.status(200).send({ status: 200, message: 'Eliminado correctamente', newWishlist: wishlistStored });
 
 	} catch (err) {
 		return res.status(500).send({ status: 500, message: err });
