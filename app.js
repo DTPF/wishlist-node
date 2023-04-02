@@ -5,7 +5,8 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const app = express();
 // Routes
-const wishlistRoutes = require("./routers/wishlist");
+const userRoutes = require("./routers/user.router");
+const wishlistRoutes = require("./routers/wishlist.router");
 
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -22,6 +23,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(`/api/${config.app.API_VERSION}`, userRoutes);
 app.use(`/api/${config.app.API_VERSION}`, wishlistRoutes);
 
 module.exports = app;
