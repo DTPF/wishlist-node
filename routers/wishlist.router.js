@@ -9,6 +9,8 @@ api
 	.post("/post-new-wishlist", [md_auth.checkJwt], WishlistController.postNewWishlist)
 	//Item
 	.post("/post-new-wishlist-item/:wishlistId", [md_auth.checkJwt], WishlistController.postNewWishlistItem)
-	.delete("/remove-wishlist-item/:wishlistId/:wishlistItemId", [md_auth.checkJwt], WishlistController.removeWishlistItem);
+	.delete("/remove-wishlist-item/:wishlistId/:wishlistItemId", [md_auth.checkJwt], WishlistController.removeWishlistItem)
+	.delete("/remove-wishlist/:wishlistId", [md_auth.checkJwt], WishlistController.removeWishlist)
+	.put("/update-wishlist/:wishlistId", [md_auth.checkJwt], WishlistController.updateWishlist)
 
 module.exports = api;
