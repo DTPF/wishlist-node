@@ -1,6 +1,6 @@
 const express = require("express");
 const config = require('./config/config');
-const helmet = require('helmet')
+// const helmet = require('helmet')
 const bodyParser = require("body-parser");
 const path = require("path");
 const app = express();
@@ -8,7 +8,6 @@ const app = express();
 const userRoutes = require("./routers/user.router");
 const wishlistRoutes = require("./routers/wishlist.router");
 
-app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
