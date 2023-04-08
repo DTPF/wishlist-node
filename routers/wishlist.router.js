@@ -12,5 +12,6 @@ api
 	.delete("/remove-wishlist-item/:wishlistId/:wishlistItemId", [md_auth.checkJwt], WishlistController.removeWishlistItem)
 	.delete("/remove-wishlist/:wishlistId", [md_auth.checkJwt], WishlistController.removeWishlist)
 	.put("/update-wishlist/:wishlistId", [md_auth.checkJwt], WishlistController.updateWishlist)
+	.put("/update-wishlist-item/:wishlistId/:wishlistItemId", [md_auth.checkJwt], WishlistController.updateWishlistItem)
 
 module.exports = api;
