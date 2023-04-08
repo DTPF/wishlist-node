@@ -11,29 +11,19 @@ async function postNewWishlist(req, res) {
 		const wishlist = new Wishlist()
 		wishlist.userId = userId
 		wishlist.backgroundColor = backgroundColor ? backgroundColor : "105, 124, 140"
-		utils.getColorByBackground(wishlist) ? wishlist.color = '#ffffff' : wishlist.color = '#000'
+		wishlist.color = utils.getColorByBackground(wishlist)
 		wishlist.position = wishlists.length
-		wishlist.wishlistName = wishlistName ? wishlistName : `🔥Nueva lista🔥🚀`
+		wishlist.wishlistName = wishlistName ? wishlistName : `📝Nueva lista🔥🚀`
 
 		try {
-			const authUser = await User.findOne({ userId: req.auth.payload.sub }).lean().exec()
+			const wishlistStored = await wishlist.save()
 
-			if (userId !== authUser._id.toString()) {
-				return res.status(401).send({ status: 401, message: 'No tienes permisos' })
-			} else {
-				try {
-					const wishlistStored = await wishlist.save()
-
-					return res.status(200).send({
-						status: 200,
-						message: 'Añadido correctamente',
-						wishlist: wishlistStored,
-					})
-				} catch (err) {
-					return res.status(500).send({ status: 500, message: 'Error del servidor', error: err })
-				}
-			}
-		} catch (error) {
+			return res.status(200).send({
+				status: 200,
+				message: 'Añadido correctamente',
+				wishlist: wishlistStored,
+			})
+		} catch (err) {
 			return res.status(500).send({ status: 500, message: 'Error del servidor', error: err })
 		}
 	} catch (error) {
@@ -45,7 +35,7 @@ async function getWishlistsByUserId(req, res) {
 	const { userId } = req.params
 
 	try {
-		const wishlists = await Wishlist.find({ userId: userId }).sort({ position: "asc" })
+		const wishlists = await Wishlist.find({ userId: userId }).sort({ position: "asc" }).lean().exec()
 
 		if (wishlists.length === 0) {
 			return res.status(400).send({ status: 400, message: 'No se ha encontrado nada' })
@@ -65,14 +55,14 @@ async function getWishlistById(req, res) {
 	const { wishlistId, userId } = req.params
 
 	try {
-		const wishlist = await Wishlist.findById({ _id: wishlistId })
+		const wishlist = await Wishlist.findById({ _id: wishlistId }).sort({ position: "asc" }).lean().exec()
 
 		try {
 			const user = await User.findByIdAndUpdate(
 				{ _id: userId },
 				{ wishlistsInfo: { currentWishlist: wishlistId } },
 				{ returnOriginal: false }
-			)
+			).sort({ position: "asc" }).lean().exec()
 
 			return res.status(200).send({
 				status: 200,
@@ -93,38 +83,46 @@ async function postNewWishlistItem(req, res) {
 	const id = uuidv4()
 
 	try {
-		const newObj = {
-			id,
-			title,
-			description,
-			isCompleted: false
-		}
-		const wishlistItemStored = await Wishlist.findByIdAndUpdate(
-			{ _id: wishlistId },
-			{
-				$push: {
-					wishlistItems: newObj
-				}
-			},
-			{ returnOriginal: false }
-		)
+		const wishlistItem = await Wishlist.findById({ _id: wishlistId }).lean().exec()
 
-		if (!wishlistItemStored) {
-			return res.status(404).send({ status: 404, message: 'No se ha podido crear' })
+		try {
+			const newObj = {
+				id,
+				title,
+				description,
+				isCompleted: false,
+				position: wishlistItem.wishlistItems.length
+			}
+			const wishlistItemStored = await Wishlist.findByIdAndUpdate(
+				{ _id: wishlistId },
+				{
+					$push: {
+						wishlistItems: newObj
+					}
+				},
+				{ returnOriginal: false }
+			).lean().exec()
+
+			if (!wishlistItemStored) {
+				return res.status(404).send({ status: 404, message: 'No se ha podido crear' })
+			}
+
+			return res.status(200).send({
+				status: 200,
+				message: 'Añadido correctamente',
+				wishlistStored: wishlistItemStored,
+				newWishlistItem: newObj
+			})
+		} catch (err) {
+			if (err.name = 'CastError') {
+				return res.status(404).send({ status: 404, message: 'No se ha encontrado la lista' })
+			} else {
+				return res.status(500).send({ status: 500, message: err })
+			}
 		}
 
-		return res.status(200).send({
-			status: 200,
-			message: 'Añadido correctamente',
-			wishlistStored: wishlistItemStored,
-			newWishlistItem: newObj
-		})
 	} catch (err) {
-		if (err.name = 'CastError') {
-			return res.status(404).send({ status: 404, message: 'No se ha encontrado la lista' })
-		} else {
-			return res.status(500).send({ status: 500, message: err })
-		}
+		return res.status(500).send({ status: 500, message: err })
 	}
 }
 
@@ -136,12 +134,12 @@ async function removeWishlistItem(req, res) {
 			{ _id: wishlistId },
 			{ $pull: { wishlistItems: { id: wishlistItemId } } },
 			{ returnOriginal: false }
-		)
+		).lean().exec()
 
 		return res.status(200).send({
 			status: 200,
 			message: 'Eliminado correctamente',
-			newWishlist: wishlistStored
+			wishlist: wishlistStored
 		})
 
 	} catch (err) {
@@ -153,7 +151,7 @@ async function removeWishlist(req, res) {
 	const { wishlistId } = req.params
 
 	try {
-		const response = await Wishlist.findByIdAndDelete({ _id: wishlistId })
+		const response = await Wishlist.findByIdAndDelete({ _id: wishlistId }).lean().exec()
 
 		return res.status(200).send({
 			status: 200,
@@ -168,20 +166,57 @@ async function removeWishlist(req, res) {
 async function updateWishlist(req, res) {
 	const { wishlistId } = req.params
 	const wishlist = req.body
-	
+
 	if (wishlist.backgroundColor) {
-		utils.getColorByBackground(wishlist) ? wishlist.color = '#ffffff' : wishlist.color = '#000'
+		wishlist.color = utils.getColorByBackground(wishlist)
 	}
 
 	try {
 		const wishlistUpdated =
-			await Wishlist.findByIdAndUpdate({ _id: wishlistId }, wishlist, { returnOriginal: false })
+			await Wishlist.findByIdAndUpdate({ _id: wishlistId }, wishlist, { returnOriginal: false }).lean().exec()
 
 		return res.status(200).send({
 			status: 200,
 			message: 'Actualizado correctamente',
 			wishlist: wishlistUpdated
 		})
+	} catch (err) {
+		return res.status(500).send({ status: 500, message: err })
+	}
+}
+
+async function updateWishlistItem(req, res) {
+	const { wishlistId, wishlistItemId } = req.params
+	const { title, isCompleted, position } = req.body
+
+	try {
+		const wishlist = await Wishlist.findOne({ _id: wishlistId })
+
+		const index = wishlist.wishlistItems.findIndex(item => item.id === wishlistItemId)
+		if (title) {
+			wishlist.wishlistItems[index].title = title
+		} else if (position) {
+			wishlist.wishlistItems[index].position = position
+		} else if (isCompleted !== undefined) {
+			wishlist.wishlistItems[index].isCompleted = isCompleted
+		}
+
+		try {
+			const wishlistStored = await Wishlist.findByIdAndUpdate(
+				{ _id: wishlistId },
+				{ wishlistItems: wishlist.wishlistItems },
+				{ returnOriginal: false }
+			)
+
+			return res.status(200).send({
+				status: 200,
+				message: 'Actualizado correctamente',
+				wishlist: wishlistStored
+			})
+		} catch (error) {
+			return res.status(500).send({ status: 500, message: err })
+		}
+
 	} catch (err) {
 		return res.status(500).send({ status: 500, message: err })
 	}
@@ -194,5 +229,6 @@ module.exports = {
 	postNewWishlistItem,
 	removeWishlistItem,
 	removeWishlist,
-	updateWishlist
+	updateWishlist,
+	updateWishlistItem
 }
