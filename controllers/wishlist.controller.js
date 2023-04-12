@@ -114,7 +114,7 @@ async function postNewWishlistItem(req, res) {
 				newWishlistItem: newObj
 			})
 		} catch (err) {
-			if (err.name = 'CastError') {
+			if (err.name === 'CastError') {
 				return res.status(404).send({ status: 404, message: 'No se ha encontrado la lista' })
 			} else {
 				return res.status(500).send({ status: 500, message: err })
