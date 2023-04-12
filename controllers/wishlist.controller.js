@@ -12,8 +12,8 @@ async function postNewWishlist(req, res) {
 		wishlist.userId = userId
 		wishlist.backgroundColor = backgroundColor ? backgroundColor : "105, 124, 140"
 		wishlist.color = utils.getColorByBackground(wishlist)
-		wishlist.position = wishlists.length
-		wishlist.wishlistName = wishlistName ? wishlistName : `📝Nueva lista🔥🚀`
+		wishlist.position = wishlists.length ? wishlists.length : 0
+		wishlist.wishlistName = wishlistName ? wishlistName : `Nueva lista 📝`
 
 		try {
 			const wishlistStored = await wishlist.save()
@@ -35,7 +35,7 @@ async function getWishlistsByUserId(req, res) {
 	const { userId } = req.params
 
 	try {
-		const wishlists = await Wishlist.find({ userId: userId }).sort({ position: "asc" }).lean().exec()
+		const wishlists = await Wishlist.find({ userId: userId }).lean().exec()
 
 		if (wishlists.length === 0) {
 			return res.status(400).send({ status: 400, message: 'No se ha encontrado nada' })
