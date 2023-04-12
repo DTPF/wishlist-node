@@ -7,7 +7,9 @@ const UserSchema = Schema({
 		unique: [true, 'Ya existe']
 	}, // Auth0 id
 	wishlistsInfo: {
-		currentWishlist: String
+		currentWishlist: String,
+		wishlistsOrder: String,
+		wishlistsDirection: String
 	},
 	language: String,
 }, {
