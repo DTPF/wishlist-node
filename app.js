@@ -9,14 +9,26 @@ const userRoutes = require("./routers/user.router")
 const wishlistRoutes = require("./routers/wishlist.router")
 const errorMiddleware = require('./middlewares/error.middleware')
 
-let corsOptions = {
+const corsOptions = {
   origin: ['wishlist.dtpf.es', 'http://localhost:3000']
 };
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(cors(corsOptions))
-app.use(helmet({ contentSecurityPolicy: false }))
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'", "https://dev-qgjlr8hrde6g23pf.us.auth0.com"],
+      objectSrc: ["'none'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "https: 'unsafe-inline'"],
+      connectSrc: ["'self'", "https://dev-qgjlr8hrde6g23pf.us.auth0.com/oauth/token"],
+      "img-src": ["'self'", "https: data:"],
+      upgradeInsecureRequests: [],
+    },
+  },
+}))
 app.use((req, res, next) => {
   res.header("Cross-Origin-Embedder-Policy", "cross-origin")
   next()
