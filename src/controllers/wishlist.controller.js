@@ -35,7 +35,7 @@ async function getWishlistsByUserId(req, res) {
 	const { userId } = req.params
 
 	try {
-		const wishlists = await Wishlist.find({ userId: userId }).lean().exec()
+		const wishlists = await Wishlist.find({ userId: userId }).sort({ updatedAt: "desc" }).lean().exec()
 
 		if (wishlists.length === 0) {
 			return res.status(400).send({ status: 400, message: 'No se ha encontrado nada' })
