@@ -4,7 +4,7 @@ async function initGetUser(req, res) {
 	const { userId } = req.body
 
 	try {
-		const userStored = await User.findOne({ userId: userId });
+		const userStored = await User.findOne({ userId: userId.toString() });
 
 		if (!userStored) {
 			const user = new User();
