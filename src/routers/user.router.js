@@ -5,5 +5,6 @@ const md_auth = require("../middlewares/auth.middleware");
 
 api
 	.post("/init-get-user", [md_auth.checkJwt], UserController.initGetUser)
+	.put("/update-user/:userId", [md_auth.checkJwt], UserController.updateUser)
 
 module.exports = api;
