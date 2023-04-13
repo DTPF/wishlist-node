@@ -19,7 +19,7 @@ app.use(cors(corsOptions))
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
-      defaultSrc: ["'self'", "https://dev-qgjlr8hrde6g23pf.us.auth0.com"],
+      defaultSrc: ["'self'", "https://dev-qgjlr8hrde6g23pf.us.auth0.com", "https://lh3.googleusercontent.com"],
       objectSrc: ["'none'"],
       scriptSrc: ["'self'"],
       styleSrc: ["'self'", "https: 'unsafe-inline'"],
