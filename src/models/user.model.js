@@ -6,12 +6,15 @@ const UserSchema = Schema({
 		required: true,
 		unique: [true, 'Ya existe']
 	}, // Auth0 id
+	email: String,
+	name: String,
+	lastname: String,
+	language: String,
 	wishlistsInfo: {
 		currentWishlist: String,
 		wishlistsOrder: String,
 		wishlistsDirection: String
 	},
-	language: String,
 }, {
   timestamps: true
 });

@@ -8,8 +8,12 @@ async function initGetUser(req, res) {
 
 		if (!userStored) {
 			const user = new User();
+			const userAuth0 = req.auth
 			user.userId = userId;
-			user.language = 'en';
+			user.email = userAuth0.email
+			user.name = userAuth0.given_name ? userAuth0.given_name : userAuth0.nickname
+			user.lastname = userAuth0.family_name || ''
+			user.language = userAuth0.locale || 'en';
 			user.wishlistsInfo.currentWishlist = 'list-id-no-selected';
 			user.wishlistsInfo.wishlistsOrder = 'updatedAt';
 			user.wishlistsInfo.wishlistsDirection = 'desc';
@@ -40,7 +44,7 @@ async function updateUser(req, res) {
 			data,
 			{ returnOriginal: false }
 		).lean().exec();
-		
+
 		if (!userStored) {
 			return res.status(400).send({ status: 400, message: 'No se ha encontrado al usuario' })
 		}
