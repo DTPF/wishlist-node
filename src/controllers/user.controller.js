@@ -15,7 +15,7 @@ async function initGetUser(req, res) {
 			user.lastname = userAuth0.family_name || ''
 			user.language = userAuth0.locale || 'en';
 			user.wishlistsInfo.currentWishlist = 'list-id-no-selected';
-			user.wishlistsInfo.wishlistsOrder = 'updatedAt';
+			user.wishlistsInfo.wishlistsOrder = 'name';
 			user.wishlistsInfo.wishlistsDirection = 'desc';
 
 			try {
