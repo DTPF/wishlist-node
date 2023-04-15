@@ -4,22 +4,22 @@ async function initGetUser(req, res) {
 	const { userId } = req.body
 
 	try {
-		const userStored = await User.findOne({ userId: userId.toString() });
+		const userStored = await User.findOne({ userId: userId.toString() })
 
 		if (!userStored) {
-			const user = new User();
+			const user = new User()
 			const userAuth0 = req.auth
-			user.userId = userId;
+			user.userId = userId
 			user.email = userAuth0.email
 			user.name = userAuth0.given_name ? userAuth0.given_name : userAuth0.nickname
 			user.lastname = userAuth0.family_name || ''
-			user.language = userAuth0.locale || 'en';
-			user.wishlistsInfo.currentWishlist = 'list-id-no-selected';
-			user.wishlistsInfo.wishlistsOrder = 'name';
-			user.wishlistsInfo.wishlistsDirection = 'desc';
+			user.language = userAuth0.locale || 'en'
+			user.wishlistsInfo.currentWishlist = 'list-id-no-selected'
+			user.wishlistsInfo.wishlistsOrder = 'name'
+			user.wishlistsInfo.wishlistsDirection = 'desc'
 
 			try {
-				const userSaved = await user.save();
+				const userSaved = await user.save()
 				return res.status(201).send({ status: 201, message: 'Usuario creado correctamente', user: userSaved })
 			}
 			catch (err) {
@@ -43,7 +43,7 @@ async function updateUser(req, res) {
 			{ _id: userId.toString() },
 			data,
 			{ returnOriginal: false }
-		).lean().exec();
+		).lean().exec()
 
 		if (!userStored) {
 			return res.status(400).send({ status: 400, message: 'No se ha encontrado al usuario' })
