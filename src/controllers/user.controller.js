@@ -11,12 +11,14 @@ async function initGetUser(req, res) {
 			const userAuth0 = req.auth
 			user.userId = userId
 			user.email = userAuth0.email
-			user.name = userAuth0.given_name ? userAuth0.given_name : userAuth0.nickname
+			user.name = userAuth0.given_name || userAuth0.nickname
 			user.lastname = userAuth0.family_name || ''
-			user.language = userAuth0.locale || 'en'
+			user.appInfo.language = userAuth0.locale || 'en'
+			user.appInfo.appColorPrimary = '#fff'
+			user.appInfo.appBgColor = '#232F3E'
 			user.wishlistsInfo.currentWishlist = 'list-id-no-selected'
 			user.wishlistsInfo.wishlistsOrder = 'name'
-			user.wishlistsInfo.wishlistsDirection = 'desc'
+			user.wishlistsInfo.wishlistsDirection = 'asc'
 
 			try {
 				const userSaved = await user.save()

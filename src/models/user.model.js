@@ -9,14 +9,18 @@ const UserSchema = Schema({
 	email: String,
 	name: String,
 	lastname: String,
-	language: String,
 	wishlistsInfo: {
 		currentWishlist: String,
 		wishlistsOrder: String,
-		wishlistsDirection: String
+		wishlistsDirection: String,
 	},
+	appInfo: {
+		language: String,
+		appColorPrimary: String,
+		appBgColor: String,
+	}
 }, {
-  timestamps: true
+	timestamps: true
 });
 
 module.exports = model("User", UserSchema);
