@@ -14,8 +14,8 @@ async function initGetUser(req, res) {
 			user.name = userAuth0.given_name || userAuth0.nickname
 			user.lastname = userAuth0.family_name || ''
 			user.appInfo.language = userAuth0.locale || 'en'
-			user.appInfo.appColorPrimary = '#fff'
-			user.appInfo.appBgColor = '#232F3E'
+			user.appInfo.colorPrimary = '#fff'
+			user.appInfo.colorPrimaryBg = '#232F3E'
 			user.wishlistsInfo.currentWishlist = 'list-id-no-selected'
 			user.wishlistsInfo.wishlistsOrder = 'name'
 			user.wishlistsInfo.wishlistsDirection = 'asc'

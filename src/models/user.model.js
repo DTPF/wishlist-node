@@ -16,8 +16,8 @@ const UserSchema = Schema({
 	},
 	appInfo: {
 		language: String,
-		appColorPrimary: String,
-		appBgColor: String,
+		colorPrimary: String,
+		colorPrimaryBg: String,
 	}
 }, {
 	timestamps: true
