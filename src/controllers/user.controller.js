@@ -16,6 +16,8 @@ async function initGetUser(req, res) {
 			user.appInfo.language = userAuth0.locale || 'en'
 			user.appInfo.colorPrimary = '#fff'
 			user.appInfo.colorPrimaryBg = '#232F3E'
+			user.appInfo.wishlistColor = '#fff'
+			user.appInfo.wishlistColorBg = '#697C8C'
 			user.wishlistsInfo.currentWishlist = 'list-id-no-selected'
 			user.wishlistsInfo.wishlistsOrder = 'name'
 			user.wishlistsInfo.wishlistsDirection = 'asc'
@@ -60,7 +62,33 @@ async function updateUser(req, res) {
 	}
 }
 
+async function changeLanguage(req, res) {
+	const { language } = req.body
+	const userId = req.auth.sub
+
+	try {
+		const userStored = await User.findOne({ userId: userId })
+		if (!userStored) {
+			return res.status(400).send({ status: 400, message: 'No se ha encontrado al usuario' })
+		}
+
+		userStored.appInfo.language = language
+		const userSaved = await userStored.save()
+		if (!userSaved) {
+			return res.status(400).send({ status: 400, message: 'Error al cambiar el idioma' })
+		}
+		return res.status(200).send(
+			{ status: 200, message: 'Idioma actualizado correctamente' }
+		)
+	} catch (err) {
+		return res.status(500).send(
+			{ status: 501, message: 'Error del servidor', error: err }
+		)
+	}
+}
+
 module.exports = {
 	initGetUser,
-	updateUser
+	updateUser,
+	changeLanguage
 }
