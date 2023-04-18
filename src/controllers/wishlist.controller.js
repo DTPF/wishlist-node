@@ -4,14 +4,14 @@ const User = require('../models/user.model')
 const utils = require('../utils/utils')
 
 async function postNewWishlist(req, res) {
-	const { userId, wishlistName, backgroundColor } = req.body
-
+	const { wishlistName, backgroundColor, color } = req.body
+	const userId = req.auth.sub
 	try {
 		const wishlists = await Wishlist.find()
 		const wishlist = new Wishlist()
 		wishlist.userId = userId
-		wishlist.backgroundColor = backgroundColor ? backgroundColor : "105, 124, 140"
-		wishlist.color = utils.getColorByBackground(wishlist)
+		wishlist.backgroundColor = backgroundColor
+		wishlist.color = color
 		wishlist.position = wishlists.length ? wishlists.length : 0
 		wishlist.wishlistName = wishlistName ? wishlistName : `Nueva lista 📝`
 
@@ -32,8 +32,7 @@ async function postNewWishlist(req, res) {
 }
 
 async function getWishlistsByUserId(req, res) {
-	const { userId } = req.params
-
+	const userId = req.auth.sub
 	try {
 		const wishlists = await Wishlist.find({ userId: userId }).sort({ updatedAt: "desc" }).lean().exec()
 
