@@ -18,6 +18,8 @@ const UserSchema = Schema({
 		language: String,
 		colorPrimary: String,
 		colorPrimaryBg: String,
+		wishlistColor: String,
+		wishlistColorBg: String
 	}
 }, {
 	timestamps: true
