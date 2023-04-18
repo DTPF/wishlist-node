@@ -1,7 +1,6 @@
 const { v4: uuidv4 } = require('uuid')
 const Wishlist = require('../models/wishlist.model')
 const User = require('../models/user.model')
-const utils = require('../utils/utils')
 
 async function postNewWishlist(req, res) {
 	const { wishlistName, backgroundColor, color } = req.body
@@ -165,11 +164,6 @@ async function removeWishlist(req, res) {
 async function updateWishlist(req, res) {
 	const { wishlistId } = req.params
 	const wishlist = req.body
-
-	if (wishlist.backgroundColor) {
-		wishlist.color = utils.getColorByBackground(wishlist)
-	}
-
 	try {
 		const wishlistUpdated =
 			await Wishlist.findByIdAndUpdate({ _id: wishlistId }, wishlist, { returnOriginal: false }).lean().exec()
