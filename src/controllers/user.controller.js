@@ -80,7 +80,7 @@ async function changeLanguage(req, res) {
 }
 
 async function updateAppColor(req, res) {
-	const { colorPrimary, colorPrimaryBg, colorPrimaryBgHex } = req.body
+	const { colorPrimary, colorPrimaryBg } = req.body
 	const userId = req.auth.sub
 
 	try {
@@ -101,7 +101,7 @@ async function updateAppColor(req, res) {
 	}
 }
 
-async function changeWishlistColor(req, res) {
+async function updateWishlistColor(req, res) {
 	const { wishlistColor, wishlistColorBg } = req.body
 	const userId = req.auth.sub
 
@@ -127,6 +127,6 @@ module.exports = {
 	initGetUser,
 	updateUser,
 	changeLanguage,
-	changeWishlistColor,
+	updateWishlistColor,
 	updateAppColor
 }

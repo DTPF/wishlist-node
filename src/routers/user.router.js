@@ -8,6 +8,6 @@ api
 	.put("/update-user/:userId", [md_auth.checkJwt], UserController.updateUser)
 	.put("/change-language", [md_auth.checkJwt], UserController.changeLanguage)
 	.put("/update-app-color", [md_auth.checkJwt], UserController.updateAppColor)
-	.put("/update-wishlist-color", [md_auth.checkJwt], UserController.changeWishlistColor)
+	.put("/update-wishlist-color", [md_auth.checkJwt], UserController.updateWishlistColor)
 
 module.exports = api;
