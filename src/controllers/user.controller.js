@@ -4,7 +4,7 @@ async function initGetUser(req, res) {
 	const { userId } = req.body
 
 	try {
-		const userStored = await User.findOne({ userId: userId.toString() })
+		const userStored = await User.findOne({ userId: userId.toString() }).lean().exec()
 
 		if (!userStored) {
 			const user = new User()
@@ -24,17 +24,17 @@ async function initGetUser(req, res) {
 
 			try {
 				const userSaved = await user.save()
-				return res.status(201).send({ status: 201, message: 'Usuario creado correctamente', user: userSaved })
+				return res.status(201).send({ status: 200, user: userSaved })
 			}
 			catch (err) {
-				return res.status(500).send({ status: 500, message: 'No se ha podido crear', error: err })
+				return res.status(500).send({ status: 500, error: err })
 			}
 		} else {
-			return res.status(200).send({ status: 200, message: 'Usuario obtenido correctamente', user: userStored })
+			return res.status(200).send({ status: 201, user: userStored })
 		}
 	}
 	catch (err) {
-		return res.status(500).send({ status: 501, message: 'Error del servidor', error: err })
+		return res.status(500).send({ status: 501, error: err })
 	}
 }
 
@@ -50,14 +50,14 @@ async function updateUser(req, res) {
 		).lean().exec()
 
 		if (!userStored) {
-			return res.status(400).send({ status: 400, message: 'No se ha encontrado al usuario' })
+			return res.status(400).send({ status: 400 })
 		}
 		return res.status(200).send(
-			{ status: 200, message: 'Usuario actualizado correctamente', user: userStored }
+			{ status: 200, user: userStored }
 		)
 	} catch (err) {
 		return res.status(500).send(
-			{ status: 501, message: 'Error del servidor', error: err }
+			{ status: 501, error: err }
 		)
 	}
 }
@@ -67,28 +67,66 @@ async function changeLanguage(req, res) {
 	const userId = req.auth.sub
 
 	try {
-		const userStored = await User.findOne({ userId: userId })
-		if (!userStored) {
-			return res.status(400).send({ status: 400, message: 'No se ha encontrado al usuario' })
-		}
+		const userStored = await User.updateOne(
+			{ userId: userId },
+			{ $set: { 'appInfo.language': language } },
+		).lean().exec();
 
-		userStored.appInfo.language = language
-		const userSaved = await userStored.save()
-		if (!userSaved) {
-			return res.status(400).send({ status: 400, message: 'Error al cambiar el idioma' })
-		}
-		return res.status(200).send(
-			{ status: 200, message: 'Idioma actualizado correctamente' }
-		)
+		if (!userStored) return res.status(400).send({ status: 400 })
+		return res.status(200).send({ status: 200 })
 	} catch (err) {
-		return res.status(500).send(
-			{ status: 501, message: 'Error del servidor', error: err }
-		)
+		return res.status(500).send({ status: 501, error: err })
+	}
+}
+
+async function updateAppColor(req, res) {
+	const { colorPrimary, colorPrimaryBg, colorPrimaryBgHex } = req.body
+	const userId = req.auth.sub
+
+	try {
+		const userStored = await User.updateOne(
+			{ userId: userId },
+			{
+				$set: {
+					'appInfo.colorPrimary': colorPrimary,
+					'appInfo.colorPrimaryBg': colorPrimaryBg,
+				}
+			},
+		).lean().exec();
+
+		if (!userStored) return res.status(400).send({ status: 400 })
+		return res.status(200).send({ status: 200 })
+	} catch (err) {
+		return res.status(500).send({ status: 501, error: err })
+	}
+}
+
+async function changeWishlistColor(req, res) {
+	const { wishlistColor, wishlistColorBg } = req.body
+	const userId = req.auth.sub
+
+	try {
+		const userStored = await User.updateOne(
+			{ userId: userId },
+			{
+				$set: {
+					'appInfo.wishlistColor': wishlistColor,
+					'appInfo.wishlistColorBg': wishlistColorBg
+				}
+			},
+		).lean().exec();
+
+		if (!userStored) return res.status(400).send({ status: 400 })
+		return res.status(200).send({ status: 200 })
+	} catch (err) {
+		return res.status(500).send({ status: 501, error: err })
 	}
 }
 
 module.exports = {
 	initGetUser,
 	updateUser,
-	changeLanguage
+	changeLanguage,
+	changeWishlistColor,
+	updateAppColor
 }
