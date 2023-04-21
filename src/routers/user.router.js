@@ -9,5 +9,6 @@ api
 	.put("/change-language", [md_auth.checkJwt], UserController.changeLanguage)
 	.put("/update-app-color", [md_auth.checkJwt], UserController.updateAppColor)
 	.put("/update-wishlist-color", [md_auth.checkJwt], UserController.updateWishlistColor)
+	.put("/change-wishlists-direction", [md_auth.checkJwt], UserController.changeWishlistsDirection)
 
 module.exports = api;

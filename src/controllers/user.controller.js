@@ -123,10 +123,32 @@ async function updateWishlistColor(req, res) {
 	}
 }
 
+async function changeWishlistsDirection(req, res) {
+	const { wishlistsDirection } = req.body
+	const userId = req.auth.sub
+
+	try {
+		const userStored = await User.updateOne(
+			{ userId: userId },
+			{
+				$set: {
+					'wishlistsInfo.wishlistsDirection': wishlistsDirection
+				}
+			},
+		).lean().exec();
+
+		if (!userStored) return res.status(400).send({ status: 400 })
+		return res.status(200).send({ status: 200 })
+	} catch (err) {
+		return res.status(500).send({ status: 501, error: err })
+	}
+}
+
 module.exports = {
 	initGetUser,
 	updateUser,
 	changeLanguage,
 	updateWishlistColor,
-	updateAppColor
+	updateAppColor,
+	changeWishlistsDirection
 }
