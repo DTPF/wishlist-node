@@ -13,5 +13,6 @@ api
 	.delete("/remove-wishlist/:wishlistId", [md_auth.checkJwt], WishlistController.removeWishlist)
 	.put("/update-wishlist/:wishlistId", [md_auth.checkJwt], WishlistController.updateWishlist)
 	.put("/update-wishlist-item/:wishlistId/:wishlistItemId", [md_auth.checkJwt], WishlistController.updateWishlistItem)
+	.put("/change-wishlist-color/:wishlistId", [md_auth.checkJwt], WishlistController.changeWishlistColor)
 
 module.exports = api;

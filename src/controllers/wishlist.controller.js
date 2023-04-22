@@ -215,6 +215,28 @@ async function updateWishlistItem(req, res) {
 	}
 }
 
+async function changeWishlistColor(req, res) {
+	const { color, backgroundColor } = req.body
+	const { wishlistId } = req.params
+
+	try {
+		const userStored = await Wishlist.updateOne(
+			{ _id: wishlistId },
+			{
+				$set: {
+					'color': color,
+					'backgroundColor': backgroundColor
+				}
+			},
+		).lean().exec();
+
+		if (!userStored) return res.status(400).send({ status: 400 })
+		return res.status(200).send({ status: 200 })
+	} catch (err) {
+		return res.status(500).send({ status: 501, error: err })
+	}
+}
+
 module.exports = {
 	postNewWishlist,
 	getWishlistsByUserId,
@@ -223,5 +245,6 @@ module.exports = {
 	removeWishlistItem,
 	removeWishlist,
 	updateWishlist,
-	updateWishlistItem
+	updateWishlistItem,
+	changeWishlistColor
 }
