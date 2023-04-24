@@ -19,12 +19,15 @@ To install the application and its dependencies, follow these steps:
 $ git clone https://github.com/DTPF/wishlist-node.git
 $ cd wishlist-node
 $ npm install
+```
+
+Before running the application, rename the .env.example file to <b>.env</b> and configure this file based on your computer and <b>auth0</b>.  You can now run the application:
+
+```bash
 $ npm run dev
 ```
 
-Now is running on http://localhost:4000 and is ready to recive requests.
-
-Note that the application requires a MongoDB instance to be running on your local machine or accessible via a remote connection. The application will look for a WISHLIST_DB_URI environment variable containing the URI of the MongoDB instance to connect to.
+Now is running on http://localhost:4000 and is ready to recive requests but not for login.
 
 ### Contributing
 Contributions to Wishlist Node are welcome and encouraged! If you encounter any issues or have ideas for new features, please submit an issue or pull request on the repository.
