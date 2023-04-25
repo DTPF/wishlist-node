@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
-const app = require("./app");
+const server = require("./app");
 const config = require('./config/config');
-const http = require("http");
-const server = http.createServer(app);
 
 try {
   mongoose.connect(config.db.MONGO_URL);
