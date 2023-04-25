@@ -10,7 +10,7 @@ const wishlistRoutes = require("./routers/wishlist.router")
 const errorMiddleware = require('./middlewares/error.middleware')
 
 const corsOptions = {
-  origin: ['wishlist.dtpf.es', 'http://localhost:3000']
+  origin: ['dalist.dtpf.es', 'http://localhost:3000']
 };
 
 app.use(bodyParser.urlencoded({ extended: false }))
