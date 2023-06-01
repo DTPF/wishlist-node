@@ -29,5 +29,9 @@ $ npm run dev
 
 Now is running on http://localhost:4000 and is ready to recive requests but not for login.
 
+### Links
+Web: <a src='https://dalist.dtpf.es'>https://dalist.dtpf.es</a><br/>
+Backend: <a src='https://github.com/DTPF/wishlist-node.git'>https://github.com/DTPF/wishlist-react.git</a>
+
 ### Contributing
 Contributions to Wishlist Node are welcome and encouraged! If you encounter any issues or have ideas for new features, please submit an issue or pull request on the repository.
